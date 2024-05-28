@@ -1,0 +1,52 @@
+name: 🚀 Feature Request
+description: Suggest an idea for this project
+title: "[Feature]: "
+labels: ["enhancement"]
+assignees:
+  - arthurmolina
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this 🚀 feature request!
+        Please check for duplicate issues and file separated requests as separated issues.
+  - type: input
+    id: contact
+    attributes:
+      label: Contact Details
+      description: How can we get in touch with you if we need more info?
+      placeholder: ex. email@example.com
+    validations:
+      required: false
+  - type: textarea
+    id: feature-description
+    attributes:
+      label: Describe the feature
+      description: A clear and concise description of the feature you would like to see added.
+      placeholder: Tell us what you see!
+    validations:
+      required: true
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Use Case
+      description: Describe the specific use case for this feature.
+      placeholder: Describe the specific use case for this feature.
+    validations:
+      required: true
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Add any other context or examples about the feature.
+      placeholder: Add any other context or examples about the feature.
+    validations:
+      required: true
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our **Code of Conduct**
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true

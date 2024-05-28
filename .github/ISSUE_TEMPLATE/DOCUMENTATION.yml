@@ -1,0 +1,36 @@
+name: 📕 Documentation Issue
+description: Report an issue in the documentation or Developer Guide
+title: "[Docs]: "
+labels: [documentation, needs-triage]
+assignees:
+  - arthurmolina
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this 📕 Documentation Issue!
+        Please check for duplicate issues and file separated requests as separated issues.
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the issue
+      description: A clear and concise description of the issue.
+    validations:
+      required: true
+
+  - type: textarea
+    id: links
+    attributes:
+      label: Links
+      description: |
+        Include links to affected documentation page(s).
+    validations:
+      required: true
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our **Code of Conduct**
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true
