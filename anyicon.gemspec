@@ -16,6 +16,14 @@ Gem::Specification.new do |spec|
   spec.description = 'Ruby on Rails View Helpers for any icon collections that have github repository available.'
   spec.license = 'MIT'
   spec.require_paths = ['lib']
+  s.metadata    = {
+    "homepage_uri"      => "https://github.com/arthurmolina/anyicon",
+    "documentation_uri" => "https://rubydoc.info/github/arthurmolina/anyicon",
+    "changelog_uri"     => "https://github.com/arthurmolina/anyicon/blob/main/docs/CHANGELOG.md",
+    "source_code_uri"   => "https://github.com/arthurmolina/anyicon",
+    "bug_tracker_uri"   => "https://github.com/arthurmolina/anyicon/issues",
+    "wiki_uri"          => "https://github.com/arthurmolina/anyicon/wiki"
+  }
 
   spec.files = Dir['{app,config,db,lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.md']
 
