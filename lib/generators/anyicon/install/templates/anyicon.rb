@@ -7,27 +7,12 @@ Anyicon.configure do |config|
   #
   # Example:
   #
-  # config.collections = {
+  # config.add_collections(
   #   custom_collection: {
   #     repo: 'user/repo',
   #     path: 'path/to/icons',
   #     branch: 'main'
   #   }
-  # }
+  # )
   #
-
-  config.collections = {
-    # Add your icon collections here
-    # Example:
-    # fontawesome_regular: {
-    #   repo: 'FortAwesome/Font-Awesome',
-    #   path: 'svgs/regular',
-    #   branch: 'master'
-    # },
-    # heroicons_solid: {
-    #   repo: 'tailwindlabs/heroicons',
-    #   path: 'optimized/24/solid',
-    #   branch: 'master'
-    # }
-  }
 end

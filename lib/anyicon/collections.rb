@@ -31,13 +31,18 @@ module Anyicon
     # @return [Array<Hash>] a list of icons with their metadata
     def list
       response = fetch(collection_url)
-      JSON.parse(response.body)
+      JSON.parse(response&.body || '{}')
     end
 
     # Downloads all icons in the collection and saves them to the local file system.
     #
     # @return [void]
     def download_all
+      if list.empty?
+        puts 'No icons available.'
+        return
+      end
+
       count = 0
       list.each do |icon|
         count += 1
@@ -50,7 +55,7 @@ module Anyicon
     #
     # @return [Hash] the configured collections
     def collections
-      @collections ||= Anyicon::Configuration.new.collections
+      @collections ||= Anyicon.configuration.collections
     end
 
     private
@@ -66,7 +71,7 @@ module Anyicon
       FileUtils.mkdir_p(icon_path(icon['name']).dirname)
       response = fetch(icon['download_url'])
       File.write(icon_path(icon['name']), response.body)
-    rescue ActionView::Template::Error, ::OpenURI::HTTPError => e
+    rescue ActionView::Template::Error, Net::HTTPError, Net::HTTPClientException => e
       ::Rails.logger.error "AnyIcon: Failed to download icon: #{e.message}"
     end
 

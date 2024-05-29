@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rails/generators'
 
 module Anyicon
@@ -17,7 +18,7 @@ module Anyicon
     # Rails application.
     class InstallGenerator < ::Rails::Generators::Base
       source_root File.join(__dir__, 'templates')
-      desc "This generator installs AnyIcon"
+      desc 'This generator installs AnyIcon'
 
       # Copies the anyicon configuration template to the initializers directory.
       #

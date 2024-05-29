@@ -17,7 +17,7 @@ RAILS_VERSION = Rails.respond_to?(:version) ? Gem::Version.new(Rails.version) : 
 
 # if we're running an old version of Rails
 if RAILS_VERSION < SKB_VERSION
-  Dummy::Application.config.secret_token    = 'deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef'
+  Dummy::Application.config.secret_token    = 'sakdoskcdeovjrwogfjqwdowdkceocecdowdjworfpwpaskghjqsdiwsdoasqpowqwoqpwoa'
 elsif Dummy::Application.config.respond_to?(:secret_key_base)
   Dummy::Application.config.secret_key_base = 'deadbeef'
 end

@@ -67,8 +67,8 @@ module Anyicon
       FileUtils.mkdir_p(icon_path(icon).dirname)
       response = fetch(url)
       File.write(icon_path(icon), response.body) if response.is_a?(Net::HTTPSuccess)
-    rescue ActionView::Template::Error, Net::HTTPError => e
-      ::Rails.logger.error "AnyIcon: Failed to download icon: #{e.message}"
+    rescue ActionView::Template::Error, Net::HTTPError, Net::HTTPClientException => e
+      ::Rails.logger.error "AnyIcon: Failed to download icon: #{e.message} (#{url})"
     end
 
     # Returns the local file path for the specified icon.
