@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module Anyicon
-  VERSION = '1.0.2'
+  VERSION = "1.0.3"
 end

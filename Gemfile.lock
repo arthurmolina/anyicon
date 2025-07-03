@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    anyicon (1.0.0)
+    anyicon (1.0.3)
       rails (>= 5.2)
 
 GEM
