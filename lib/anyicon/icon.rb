@@ -23,7 +23,7 @@ module Anyicon
     # @param props [Hash] additional properties to apply to the SVG element
     def initialize(icon:, **props)
       super()
-      @icons = icon.split(',').map { |i| i.split(':') }
+      @icons = icon.to_s.split(',').map { |i| i.split(':') }
       @props = props
     end
 
