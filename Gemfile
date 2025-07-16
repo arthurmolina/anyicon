@@ -1,15 +1,20 @@
 # frozen_string_literal: true
 
-source 'https://rubygems.org'
+source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 gemspec
 
 group :development do
-  gem 'guard', '>= 2.9'
-  gem 'guard-minitest'
+  gem "guard", ">= 2.9"
+  gem "guard-minitest"
 end
 
 group :test do
-  gem 'mocha'
+  gem "mocha"
+end
+
+group :development, :test do
+  # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
+  gem "rubocop-rails-omakase", require: false
 end
