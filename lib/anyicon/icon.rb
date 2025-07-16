@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'net/http'
-require 'nokogiri'
-require 'fileutils'
+require "net/http"
+require "nokogiri"
+require "fileutils"
 
 module Anyicon
   # The Icon class is responsible for managing the rendering of icons from various
@@ -21,9 +21,10 @@ module Anyicon
     #
     # @param icon [String] a comma-separated string of icon names, each in the format 'collection:name'
     # @param props [Hash] additional properties to apply to the SVG element
-    def initialize(icon:, **props)
+    def initialize(icon = nil, **props)
+      # binding.pry
       super()
-      @icons = icon.to_s.split(',').map { |i| i.split(':') }
+      @icons = (icon || props[:icon]).to_s.split(",").map { |i| i.split(":") }
       @props = props
     end
 
@@ -31,7 +32,7 @@ module Anyicon
     #
     # @return [String] the HTML-safe SVG content
     def render
-      result = ''.html_safe
+      result = "".html_safe
       @icons.each do |icon|
         ensure_icon_exists(icon)
         result.concat(svg_content(icon).html_safe)
@@ -76,7 +77,7 @@ module Anyicon
     # @param icon [Array] the collection and name of the icon
     # @return [Pathname] the path to the icon file
     def icon_path(icon)
-      ::Rails.root.join('app', 'assets', 'images', 'icons', icon[0], "#{icon[1]}.svg")
+      ::Rails.root.join("app", "assets", "images", "icons", icon[0], "#{icon[1]}.svg")
     end
 
     # Constructs the URL to download the specified icon.
@@ -86,8 +87,8 @@ module Anyicon
     def icon_url(icon)
       return nil unless collections.keys.include?(icon[0].to_sym)
 
-      ['https://github.com/', collections[icon[0].to_sym][:repo], '/raw/', collections[icon[0].to_sym][:branch], '/',
-       collections[icon[0].to_sym][:path], '/', icon[1], '.svg'].join('')
+      [ "https://github.com/", collections[icon[0].to_sym][:repo], "/raw/", collections[icon[0].to_sym][:branch], "/",
+       collections[icon[0].to_sym][:path], "/", icon[1], ".svg" ].join("")
     end
 
     # Reads and customizes the SVG content for the specified icon.
@@ -95,11 +96,11 @@ module Anyicon
     # @param icon [Array] the collection and name of the icon
     # @return [String] the customized SVG content
     def svg_content(icon)
-      return '' unless File.file?(icon_path(icon))
+      return "" unless File.file?(icon_path(icon))
 
       svg_content = File.read(icon_path(icon))
       doc = Nokogiri::HTML::DocumentFragment.parse(svg_content)
-      svg = doc.at_css 'svg'
+      svg = doc.at_css "svg"
 
       @props.each do |key, value|
         value = "#{value} #{icon[-2..].join(' ')}" if key == :class && icon.count > 2
@@ -115,8 +116,8 @@ module Anyicon
       #
       # @param kwargs [Hash] the parameters for initializing an Icon instance
       # @return [String] the HTML-safe SVG content
-      def render(**kwargs)
-        new(**kwargs).render
+      def render(*args, **kwargs)
+        new(*args, **kwargs).render
       end
     end
   end

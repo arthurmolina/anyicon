@@ -8,8 +8,8 @@ module Anyicon
       # @param icon [String] the name of the icon in the format 'collection:icon_name'
       # @param props [Hash] additional properties to apply to the SVG element
       # @return [String] the rendered SVG icon
-      def anyicon(icon:, **props)
-        Anyicon::Icon.render(icon:, **props)
+      def anyicon(icon = nil, **props)
+        Anyicon::Icon.render(icon = icon, **props)
       end
     end
   end

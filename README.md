@@ -47,6 +47,11 @@ You can just use the anyicon helper in your views:
 ```erb
 <%= anyicon icon: 'fontawesome_regular:address-book' %>
 ```
+or
+
+```erb
+<%= anyicon 'fontawesome_regular:address-book' %>
+```
 
 ## Configuration
 
