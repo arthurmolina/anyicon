@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require File.expand_path('boot', __dir__)
+require File.expand_path("boot", __dir__)
 
 # require "rails/all"
 
@@ -8,7 +8,7 @@ Bundler.require(:default, :development)
 
 module Dummy
   class Application < Rails::Application
-    config.encoding = 'utf-8'
+    config.encoding = "utf-8"
 
     # replacement for environments/*.rb
     config.active_support.deprecation = :stderr

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'rails/generators'
+require "rails/generators"
 
 module Anyicon
   module Generators
@@ -17,14 +17,14 @@ module Anyicon
     # This will copy the `anyicon.rb` template to `config/initializers/anyicon.rb` in your
     # Rails application.
     class InstallGenerator < ::Rails::Generators::Base
-      source_root File.join(__dir__, 'templates')
-      desc 'This generator installs AnyIcon'
+      source_root File.join(__dir__, "templates")
+      desc "This generator installs AnyIcon"
 
       # Copies the anyicon configuration template to the initializers directory.
       #
       # @return [void]
       def copy_config
-        template 'anyicon.rb', 'config/initializers/anyicon.rb'
+        template "anyicon.rb", "config/initializers/anyicon.rb"
       end
     end
   end

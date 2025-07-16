@@ -19,7 +19,7 @@ module Anyicon
     # @return [Net::HTTPResponse] the HTTP response
     # @raise [Net::HTTPError] if the number of redirects exceeds the limit or another HTTP error occurs
     def fetch(url, limit = 10)
-      raise Net::HTTPError, 'Too many HTTP redirects' if limit.zero?
+      raise Net::HTTPError, "Too many HTTP redirects" if limit.zero?
       return nil if url.nil?
 
       uri = URI.parse(URI::DEFAULT_PARSER.escape(url))
@@ -27,7 +27,7 @@ module Anyicon
 
       case response
       when Net::HTTPSuccess then response
-      when Net::HTTPRedirection then fetch(response['location'], limit - 1)
+      when Net::HTTPRedirection then fetch(response["location"], limit - 1)
       else
         response.error!
       end

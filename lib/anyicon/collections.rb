@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'net/http'
-require 'json'
-require 'fileutils'
+require "net/http"
+require "json"
+require "fileutils"
 
 module Anyicon
   # The Collection class is responsible for managing icon collections
@@ -31,7 +31,7 @@ module Anyicon
     # @return [Array<Hash>] a list of icons with their metadata
     def list
       response = fetch(collection_url)
-      JSON.parse(response&.body || '{}')
+      JSON.parse(response&.body || "{}")
     end
 
     # Downloads all icons in the collection and saves them to the local file system.
@@ -39,7 +39,7 @@ module Anyicon
     # @return [void]
     def download_all
       if list.empty?
-        puts 'No icons available.'
+        puts "No icons available."
         return
       end
 
@@ -65,12 +65,12 @@ module Anyicon
     # @param icon [Hash] the metadata of the icon to download
     # @return [void]
     def download(icon)
-      return if icon['download_url'].nil?
-      return if File.exist?(icon_path(icon['name']))
+      return if icon["download_url"].nil?
+      return if File.exist?(icon_path(icon["name"]))
 
-      FileUtils.mkdir_p(icon_path(icon['name']).dirname)
-      response = fetch(icon['download_url'])
-      File.write(icon_path(icon['name']), response.body)
+      FileUtils.mkdir_p(icon_path(icon["name"]).dirname)
+      response = fetch(icon["download_url"])
+      File.write(icon_path(icon["name"]), response.body)
     rescue ActionView::Template::Error, Net::HTTPError, Net::HTTPClientException => e
       ::Rails.logger.error "AnyIcon: Failed to download icon: #{e.message}"
     end
@@ -80,7 +80,7 @@ module Anyicon
     # @param icon_name [String] the name of the icon
     # @return [Pathname] the path to the icon file
     def icon_path(icon_name)
-      ::Rails.root.join('app', 'assets', 'images', 'icons', @collection.to_s, icon_name)
+      ::Rails.root.join("app", "assets", "images", "icons", @collection.to_s, icon_name)
     end
 
     # Constructs the URL to fetch the icon collection directory contents from the repository.
@@ -90,11 +90,11 @@ module Anyicon
       return nil unless collections.keys.include?(@collection)
 
       [
-        'https://api.github.com/repos/',
+        "https://api.github.com/repos/",
         collections[@collection][:repo],
-        '/contents/',
+        "/contents/",
         collections[@collection][:path]
-      ].join('')
+      ].join("")
     end
   end
 end

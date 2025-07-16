@@ -9,13 +9,13 @@ require 'anyicon/version'
 Gem::Specification.new do |spec|
   spec.name = 'anyicon'
   spec.version = Anyicon::VERSION
-  spec.authors = ['Arthur Molina']
-  spec.email = ['arthurmolina@gmail.com']
+  spec.authors = [ 'Arthur Molina' ]
+  spec.email = [ 'arthurmolina@gmail.com' ]
   spec.homepage = 'https://github.com/arthurmolina/anyicon'
   spec.summary = 'Rails View Helpers for any icon collections.'
   spec.description = 'Ruby on Rails View Helpers for any icon collections that have github repository available.'
   spec.license = 'MIT'
-  spec.require_paths = ['lib']
+  spec.require_paths = [ 'lib' ]
   spec.metadata    = {
     "homepage_uri"      => "https://github.com/arthurmolina/anyicon",
     "documentation_uri" => "https://rubydoc.info/github/arthurmolina/anyicon",
