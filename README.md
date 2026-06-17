@@ -66,6 +66,33 @@ Anyicon.configure do |config|
 end
 ```
 
+Or add new collections while keeping the defaults:
+
+```ruby
+Anyicon.configure do |config|
+  config.add_collections(
+    my_custom_collection: { repo: 'user/repo', path: 'path/to/icons', branch: 'main' }
+  )
+end
+```
+
+### GitHub Token
+
+Anyicon fetches icons from GitHub. Without authentication, the GitHub API limits requests to **60 per hour**. If you use `Anyicon::Collection` to download entire collections, or your app fetches many icons on first deploy, you may hit this limit.
+
+Setting a GitHub personal access token raises the limit to **5,000 requests per hour**. The token is also used when downloading individual icons.
+
+```ruby
+# config/initializers/anyicon.rb
+Anyicon.configure do |config|
+  config.github_token = ENV["GITHUB_TOKEN"]
+end
+```
+
+To create a token, go to [GitHub Settings > Developer settings > Personal access tokens > Fine-grained tokens](https://github.com/settings/tokens?type=beta) and generate a token. No special permissions/scopes are needed — public repository read access is sufficient.
+
+> **Note:** This is optional. If you only use a few icons and they are already cached locally in `app/assets/images/icons/`, no API calls are made and no token is needed.
+
 ## Collections Available
 
 | Collection                           | Github List          | Example                          | Quantity | License |
@@ -96,7 +123,7 @@ To get started with development:
 
 ```
 git clone https://github.com/arthurmolina/anyicon.git
-cd heroicon
+cd anyicon
 bundle install
 bundle exec rake test
 ```

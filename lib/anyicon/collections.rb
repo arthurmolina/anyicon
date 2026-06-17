@@ -31,7 +31,8 @@ module Anyicon
     # @return [Array<Hash>] a list of icons with their metadata
     def list
       response = fetch(collection_url)
-      JSON.parse(response&.body || "{}")
+      result = JSON.parse(response&.body || "[]")
+      result.is_a?(Array) ? result : []
     end
 
     # Downloads all icons in the collection and saves them to the local file system.
@@ -39,7 +40,7 @@ module Anyicon
     # @return [void]
     def download_all
       if list.empty?
-        puts "No icons available."
+        ::Rails.logger.info "AnyIcon: No icons available for #{@collection}."
         return
       end
 
@@ -48,7 +49,7 @@ module Anyicon
         count += 1
         download(icon)
       end
-      puts "#{@collection}: #{count} downloads."
+      ::Rails.logger.info "AnyIcon: #{@collection}: #{count} downloads."
     end
 
     # Retrieves the configured collections from Anyicon.
@@ -80,20 +81,24 @@ module Anyicon
     # @param icon_name [String] the name of the icon
     # @return [Pathname] the path to the icon file
     def icon_path(icon_name)
-      ::Rails.root.join("app", "assets", "images", "icons", @collection.to_s, icon_name)
+      sanitized_collection = File.basename(@collection.to_s.gsub(/[^a-zA-Z0-9_\-]/, ""))
+      sanitized_name = File.basename(icon_name.to_s)
+      ::Rails.root.join("app", "assets", "images", "icons", sanitized_collection, sanitized_name)
     end
 
     # Constructs the URL to fetch the icon collection directory contents from the repository.
     #
     # @return [String, nil] the URL to fetch the collection contents, or nil if the collection is not configured
     def collection_url
-      return nil unless collections.keys.include?(@collection)
+      return nil unless collections.key?(@collection)
 
       [
         "https://api.github.com/repos/",
         collections[@collection][:repo],
         "/contents/",
-        collections[@collection][:path]
+        collections[@collection][:path],
+        "?ref=",
+        collections[@collection][:branch]
       ].join("")
     end
   end

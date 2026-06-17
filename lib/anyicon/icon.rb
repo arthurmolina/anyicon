@@ -21,23 +21,29 @@ module Anyicon
     #
     # @param icon [String] a comma-separated string of icon names, each in the format 'collection:name'
     # @param props [Hash] additional properties to apply to the SVG element
+    ALLOWED_ATTRIBUTES = %w[
+      class id style width height viewBox fill stroke
+      stroke-width opacity transform title aria-label aria-hidden role
+    ].freeze
+
+    DATA_ATTRIBUTE_PATTERN = /\Adata-[\w-]+\z/
+
     def initialize(icon = nil, **props)
-      # binding.pry
       super()
       @icons = (icon || props[:icon]).to_s.split(",").map { |i| i.split(":") }
-      @props = props
+      @icons.reject! { |i| i.length < 2 }
+      @props = props.select { |key, _| allowed_attribute?(key) }
     end
 
     # Renders the SVG content for the specified icons.
     #
     # @return [String] the HTML-safe SVG content
     def render
-      result = "".html_safe
-      @icons.each do |icon|
+      parts = @icons.map do |icon|
         ensure_icon_exists(icon)
-        result.concat(svg_content(icon).html_safe)
+        svg_content(icon)
       end
-      result
+      ActiveSupport::SafeBuffer.new(parts.join)
     end
 
     private
@@ -47,6 +53,23 @@ module Anyicon
     # @return [Hash] the collections configuration
     def collections
       @collections ||= Anyicon.configuration.collections
+    end
+
+    # Checks if an attribute key is allowed on the SVG element.
+    #
+    # @param key [Symbol, String] the attribute key
+    # @return [Boolean]
+    def allowed_attribute?(key)
+      name = key.to_s
+      ALLOWED_ATTRIBUTES.include?(name) || name.match?(DATA_ATTRIBUTE_PATTERN)
+    end
+
+    # Sanitizes an icon name component to prevent path traversal.
+    #
+    # @param name [String] the raw icon name component
+    # @return [String] the sanitized name
+    def sanitize_name(name)
+      File.basename(name.to_s.gsub(/[^a-zA-Z0-9_\-]/, ""))
     end
 
     # Ensures the specified icon exists by downloading it if necessary.
@@ -77,7 +100,7 @@ module Anyicon
     # @param icon [Array] the collection and name of the icon
     # @return [Pathname] the path to the icon file
     def icon_path(icon)
-      ::Rails.root.join("app", "assets", "images", "icons", icon[0], "#{icon[1]}.svg")
+      ::Rails.root.join("app", "assets", "images", "icons", sanitize_name(icon[0]), "#{sanitize_name(icon[1])}.svg")
     end
 
     # Constructs the URL to download the specified icon.
@@ -85,10 +108,22 @@ module Anyicon
     # @param icon [Array] the collection and name of the icon
     # @return [String, nil] the URL to download the icon, or nil if the collection is not configured
     def icon_url(icon)
-      return nil unless collections.keys.include?(icon[0].to_sym)
+      collection_key = sanitize_name(icon[0]).to_sym
+      return nil unless collections.key?(collection_key)
 
-      [ "https://github.com/", collections[icon[0].to_sym][:repo], "/raw/", collections[icon[0].to_sym][:branch], "/",
-       collections[icon[0].to_sym][:path], "/", icon[1], ".svg" ].join("")
+      [ "https://github.com/", collections[collection_key][:repo], "/raw/", collections[collection_key][:branch], "/",
+       collections[collection_key][:path], "/", sanitize_name(icon[1]), ".svg" ].join("")
+    end
+
+    # Returns the cached raw SVG content for the specified icon.
+    #
+    # @param icon [Array] the collection and name of the icon
+    # @return [String, nil] the raw SVG file content, or nil if file doesn't exist
+    def cached_svg(icon)
+      path = icon_path(icon)
+      return nil unless File.file?(path)
+
+      self.class.svg_cache[path.to_s] ||= File.read(path)
     end
 
     # Reads and customizes the SVG content for the specified icon.
@@ -96,10 +131,10 @@ module Anyicon
     # @param icon [Array] the collection and name of the icon
     # @return [String] the customized SVG content
     def svg_content(icon)
-      return "" unless File.file?(icon_path(icon))
+      raw = cached_svg(icon)
+      return "" unless raw
 
-      svg_content = File.read(icon_path(icon))
-      doc = Nokogiri::HTML::DocumentFragment.parse(svg_content)
+      doc = Nokogiri::HTML::DocumentFragment.parse(raw)
       svg = doc.at_css "svg"
 
       @props.each do |key, value|
@@ -118,6 +153,19 @@ module Anyicon
       # @return [String] the HTML-safe SVG content
       def render(*args, **kwargs)
         new(*args, **kwargs).render
+      end
+
+      # In-memory cache for raw SVG file contents, keyed by file path.
+      # Avoids repeated File.read + disk I/O for the same icon.
+      #
+      # @return [Hash] the SVG cache
+      def svg_cache
+        @svg_cache ||= {}
+      end
+
+      # Clears the in-memory SVG cache.
+      def clear_cache!
+        @svg_cache = {}
       end
     end
   end

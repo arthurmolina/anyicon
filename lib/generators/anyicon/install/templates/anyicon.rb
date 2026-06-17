@@ -15,4 +15,11 @@ Anyicon.configure do |config|
   #   }
   # )
   #
+
+  ##
+  # Optional: Set a GitHub personal access token to avoid API rate limits
+  # (60 requests/hour unauthenticated vs 5,000/hour authenticated).
+  #
+  # config.github_token = ENV["GITHUB_TOKEN"]
+  #
 end

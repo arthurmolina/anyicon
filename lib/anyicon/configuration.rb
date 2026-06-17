@@ -42,9 +42,13 @@ module Anyicon
     # @return [Hash] the configured icon collections
     attr_accessor :collections
 
+    # @return [String, nil] optional GitHub personal access token for API requests
+    attr_accessor :github_token
+
     # Initializes a new Configuration instance with default settings.
     def initialize
       @collections = DEFAULT_COLLECTIONS.dup
+      @github_token = nil
     end
 
     def add_collections(new_collections)

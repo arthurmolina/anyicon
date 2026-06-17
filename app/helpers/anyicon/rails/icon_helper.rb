@@ -9,7 +9,7 @@ module Anyicon
       # @param props [Hash] additional properties to apply to the SVG element
       # @return [String] the rendered SVG icon
       def anyicon(icon = nil, **props)
-        Anyicon::Icon.render(icon = icon, **props)
+        Anyicon::Icon.render(icon, **props)
       end
     end
   end

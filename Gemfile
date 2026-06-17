@@ -3,11 +3,13 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
+gem "rails", "~> 7.2"
+
 gemspec
 
 group :development do
-  gem "guard", ">= 2.9"
-  gem "guard-minitest"
+  gem "guard", "~> 2.20"
+  gem "guard-minitest", "~> 3.0"
 end
 
 group :test do
