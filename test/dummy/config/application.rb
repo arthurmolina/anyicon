@@ -2,9 +2,8 @@
 
 require File.expand_path("boot", __dir__)
 
-# require "rails/all"
-
-require "rails"
+require "action_controller/railtie"
+require "action_view/railtie"
 Bundler.require(*Rails.groups)
 
 module Dummy

@@ -212,6 +212,8 @@ GEM
     psych (5.4.0)
       date
       stringio
+    puma (8.0.2)
+      nio4r (~> 2.0)
     racc (1.8.1)
     rack (3.2.6)
     rack-session (2.1.2)
@@ -359,6 +361,7 @@ DEPENDENCIES
   mocha
   pry
   pry-rails
+  puma
   rails (~> 7.2)
   rubocop-rails-omakase
   sqlite3

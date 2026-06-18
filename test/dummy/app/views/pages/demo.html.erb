@@ -1,0 +1,174 @@
+<h1><%= anyicon "fontawesome_regular:address-book", width: "40", height: "40", fill: "#3b82f6" %> Anyicon Demo</h1>
+<p class="subtitle">Ruby on Rails view helpers for rendering SVG icons from any GitHub collection.</p>
+
+<h2>Basic Usage</h2>
+<div class="section">
+  <div class="demo-row">
+    <div class="demo-icon">
+      <%= anyicon "fontawesome_regular:address-book" %>
+    </div>
+    <div class="demo-info">
+      <div class="demo-label">Positional argument</div>
+      <code class="demo-code">&lt;%= anyicon "fontawesome_regular:address-book" %&gt;</code>
+    </div>
+  </div>
+
+  <div class="demo-row">
+    <div class="demo-icon">
+      <%= anyicon icon: "fontawesome_regular:address-book" %>
+    </div>
+    <div class="demo-info">
+      <div class="demo-label">Keyword argument</div>
+      <code class="demo-code">&lt;%= anyicon icon: "fontawesome_regular:address-book" %&gt;</code>
+    </div>
+  </div>
+</div>
+
+<h2>Sizing</h2>
+<div class="section">
+  <div class="demo-row">
+    <div class="color-row">
+      <%= anyicon "fontawesome_regular:address-book", width: "16", height: "16", fill: "#e2e8f0" %>
+      <%= anyicon "fontawesome_regular:address-book", width: "24", height: "24", fill: "#e2e8f0" %>
+      <%= anyicon "fontawesome_regular:address-book", width: "32", height: "32", fill: "#e2e8f0" %>
+      <%= anyicon "fontawesome_regular:address-book", width: "48", height: "48", fill: "#e2e8f0" %>
+      <%= anyicon "fontawesome_regular:address-book", width: "64", height: "64", fill: "#e2e8f0" %>
+    </div>
+    <div class="demo-info">
+      <div class="demo-label">width &amp; height attributes</div>
+      <code class="demo-code">anyicon "...", width: "32", height: "32"</code>
+    </div>
+  </div>
+</div>
+
+<h2>Colors</h2>
+<div class="section">
+  <div class="demo-row">
+    <div class="color-row">
+      <%= anyicon "fontawesome_regular:address-book", width: "32", height: "32", fill: "#ef4444" %>
+      <%= anyicon "fontawesome_regular:address-book", width: "32", height: "32", fill: "#f97316" %>
+      <%= anyicon "fontawesome_regular:address-book", width: "32", height: "32", fill: "#eab308" %>
+      <%= anyicon "fontawesome_regular:address-book", width: "32", height: "32", fill: "#22c55e" %>
+      <%= anyicon "fontawesome_regular:address-book", width: "32", height: "32", fill: "#3b82f6" %>
+      <%= anyicon "fontawesome_regular:address-book", width: "32", height: "32", fill: "#8b5cf6" %>
+      <%= anyicon "fontawesome_regular:address-book", width: "32", height: "32", fill: "#ec4899" %>
+    </div>
+    <div class="demo-info">
+      <div class="demo-label">fill attribute</div>
+      <code class="demo-code">anyicon "...", fill: "#3b82f6"</code>
+    </div>
+  </div>
+</div>
+
+<h2>HTML Attributes</h2>
+<div class="section">
+  <div class="demo-row">
+    <div class="demo-icon">
+      <%= anyicon "fontawesome_regular:address-book", class: "icon-custom", id: "my-icon", fill: "#e2e8f0" %>
+    </div>
+    <div class="demo-info">
+      <div class="demo-label">class &amp; id</div>
+      <code class="demo-code">anyicon "...", class: "icon-custom", id: "my-icon"</code>
+    </div>
+  </div>
+
+  <div class="demo-row">
+    <div class="demo-icon">
+      <%= anyicon "fontawesome_regular:address-book", "data-controller": "icon", "data-action": "click->icon#toggle", fill: "#e2e8f0" %>
+    </div>
+    <div class="demo-info">
+      <div class="demo-label">data-* attributes (Stimulus-friendly)</div>
+      <code class="demo-code">anyicon "...", "data-controller": "icon", "data-action": "click->icon#toggle"</code>
+    </div>
+  </div>
+
+  <div class="demo-row">
+    <div class="demo-icon">
+      <%= anyicon "fontawesome_regular:address-book", "aria-label": "Contacts", role: "img", fill: "#e2e8f0" %>
+    </div>
+    <div class="demo-info">
+      <div class="demo-label">Accessibility (aria-* &amp; role)</div>
+      <code class="demo-code">anyicon "...", "aria-label": "Contacts", role: "img"</code>
+    </div>
+  </div>
+</div>
+
+<h2>Inline with Text</h2>
+<div class="section">
+  <div class="demo-row">
+    <div>
+      <span class="badge">
+        <%= anyicon "fontawesome_regular:address-book", width: "16", height: "16", fill: "#e2e8f0" %>
+        12 contacts
+      </span>
+    </div>
+    <div class="demo-info">
+      <div class="demo-label">Badge component</div>
+      <code class="demo-code">&lt;span class="badge"&gt;&lt;%= anyicon "...", width: "16", height: "16" %&gt; 12 contacts&lt;/span&gt;</code>
+    </div>
+  </div>
+
+  <div class="demo-row">
+    <div>
+      <a href="#" class="btn">
+        <%= anyicon "fontawesome_regular:address-book", width: "18", height: "18" %>
+        Open Contacts
+      </a>
+    </div>
+    <div class="demo-info">
+      <div class="demo-label">Button with icon</div>
+      <code class="demo-code">&lt;a class="btn"&gt;&lt;%= anyicon "...", width: "18", height: "18" %&gt; Open Contacts&lt;/a&gt;</code>
+    </div>
+  </div>
+</div>
+
+<h2>Styling with CSS</h2>
+<div class="section">
+  <style>
+    .icon-spin { animation: spin 2s linear infinite; }
+    .icon-pulse { animation: pulse 1.5s ease-in-out infinite; }
+    .icon-bounce { animation: bounce 1s ease infinite; }
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+  </style>
+  <div class="demo-row">
+    <div class="color-row">
+      <%= anyicon "fontawesome_regular:address-book", width: "32", height: "32", fill: "#3b82f6", class: "icon-spin", style: "display:inline-block" %>
+      <%= anyicon "fontawesome_regular:address-book", width: "32", height: "32", fill: "#22c55e", class: "icon-pulse" %>
+      <%= anyicon "fontawesome_regular:address-book", width: "32", height: "32", fill: "#f97316", class: "icon-bounce", style: "display:inline-block" %>
+    </div>
+    <div class="demo-info">
+      <div class="demo-label">CSS animations via class</div>
+      <code class="demo-code">anyicon "...", class: "icon-spin"</code>
+    </div>
+  </div>
+
+  <div class="demo-row">
+    <div class="color-row">
+      <%= anyicon "fontawesome_regular:address-book", width: "32", height: "32", style: "fill: #e2e8f0; filter: drop-shadow(0 0 6px #3b82f6)" %>
+      <%= anyicon "fontawesome_regular:address-book", width: "32", height: "32", style: "fill: #e2e8f0; opacity: 0.3" %>
+      <%= anyicon "fontawesome_regular:address-book", width: "32", height: "32", style: "fill: #e2e8f0; transform: rotate(45deg)" %>
+    </div>
+    <div class="demo-info">
+      <div class="demo-label">Inline styles</div>
+      <code class="demo-code">anyicon "...", style: "filter: drop-shadow(...)"</code>
+    </div>
+  </div>
+</div>
+
+<h2>Available Collections</h2>
+<div class="section">
+  <div class="icon-grid">
+    <% Anyicon.configuration.collections.each do |name, config| %>
+      <div class="icon-card">
+        <span style="font-size: 1.5rem;">📦</span>
+        <span><%= name %></span>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<footer>
+  <p>Anyicon v<%= Anyicon::VERSION %> &mdash; Icons are fetched from GitHub and cached locally in <code>app/assets/images/icons/</code></p>
+</footer>

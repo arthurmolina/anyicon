@@ -10,6 +10,7 @@ gemspec
 group :development do
   gem "guard", "~> 2.20"
   gem "guard-minitest", "~> 3.0"
+  gem "puma"
 end
 
 group :test do
