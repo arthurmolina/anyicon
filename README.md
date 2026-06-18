@@ -117,11 +117,26 @@ Please, read the license before using any of these collections. This gem does no
 
 Fell free to add your own collection to this list.
 
+## Demo
+
+To see Anyicon in action with an interactive demo page:
+
+```sh
+git clone https://github.com/arthurmolina/anyicon.git
+cd anyicon
+bundle install
+RAILS_ENV=development bundle exec rackup -p 3000 test/dummy/config.ru
+```
+
+Then open [http://localhost:3000/demo](http://localhost:3000/demo).
+
+The demo showcases basic usage, sizing, colors, HTML/data/aria attributes, inline text components, and CSS animations.
+
 ## Development
 
 To get started with development:
 
-```
+```sh
 git clone https://github.com/arthurmolina/anyicon.git
 cd anyicon
 bundle install
