@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    anyicon (1.1.0)
+    anyicon (1.1.1)
       nokogiri
       rails (>= 5.2)
 
