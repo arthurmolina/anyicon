@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Anyicon — SVG Icon Helper for Ruby on Rails</title>
+  <meta name="description" content="Ruby on Rails view helpers for rendering SVG icons from any GitHub collection. Font Awesome, Heroicons, Tabler, and more.">
+  <style>
+    :root {
+      --bg: #0f172a;
+      --bg-card: #1e293b;
+      --bg-code: #0d1117;
+      --border: #334155;
+      --text: #e2e8f0;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --accent: #3b82f6;
+      --accent-glow: rgba(59, 130, 246, 0.3);
+      --green: #22c55e;
+      --orange: #f97316;
+      --pink: #ec4899;
+      --purple: #8b5cf6;
+      --red: #ef4444;
+      --yellow: #eab308;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    /* GitHub Ribbon */
+    .github-ribbon {
+      position: fixed;
+      top: 0;
+      right: 0;
+      z-index: 1000;
+    }
+
+    .container { max-width: 860px; margin: 0 auto; padding: 0 1.5rem; }
+
+    /* Hero */
+    .hero {
+      text-align: center;
+      padding: 5rem 1.5rem 3rem;
+    }
+    .hero-logo {
+      max-width: 600px;
+      width: 100%;
+      border-radius: 16px;
+      margin-bottom: 2rem;
+    }
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.5rem;
+    }
+    .hero h1 span { color: var(--accent); }
+    .hero p {
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      max-width: 540px;
+      margin: 0 auto 2rem;
+    }
+    .hero-badges {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 2.5rem;
+    }
+    .hero-badges img { height: 24px; }
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
+    .btn-primary:hover { background: #2563eb; transform: translateY(-1px); }
+    .btn-secondary {
+      background: var(--bg-card);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover { border-color: var(--accent); }
+
+    /* Install banner */
+    .install {
+      background: var(--bg-code);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.5rem;
+      max-width: 400px;
+      margin: 2.5rem auto 0;
+      font-family: "SF Mono", "Fira Code", "Cascadia Code", monospace;
+      font-size: 0.95rem;
+      color: var(--green);
+      text-align: left;
+      position: relative;
+    }
+    .install .comment { color: var(--text-dim); }
+    .install button {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      background: var(--border);
+      border: none;
+      color: var(--text-muted);
+      padding: 0.3rem 0.6rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.75rem;
+    }
+    .install button:hover { background: var(--accent); color: white; }
+
+    /* Sections */
+    section {
+      padding: 4rem 0;
+    }
+    section + section {
+      border-top: 1px solid var(--border);
+    }
+    .section-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .section-sub {
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+      font-size: 1.05rem;
+    }
+
+    /* Features grid */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+    }
+    .feature {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .feature:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .feature-icon {
+      font-size: 2rem;
+      margin-bottom: 0.75rem;
+    }
+    .feature h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+    }
+    .feature p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    /* Code blocks */
+    .code-example {
+      background: var(--bg-code);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+    .code-header {
+      background: var(--border);
+      padding: 0.5rem 1rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .code-body {
+      padding: 1.25rem 1.5rem;
+      font-family: "SF Mono", "Fira Code", "Cascadia Code", monospace;
+      font-size: 0.9rem;
+      line-height: 1.8;
+      overflow-x: auto;
+      white-space: pre;
+      margin: 0;
+    }
+    .code-body .kw { color: var(--pink); }
+    .code-body .str { color: var(--green); }
+    .code-body .sym { color: var(--purple); }
+    .code-body .cmt { color: var(--text-dim); }
+    .code-body .fn { color: var(--accent); }
+    .code-body .tag { color: var(--red); }
+    .code-body .attr { color: var(--orange); }
+
+    /* Collections */
+    .collections-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+    .collection-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem;
+      text-decoration: none;
+      color: var(--text);
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .collection-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .collection-card h4 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    .collection-card .count {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .collection-card .collections-list {
+      margin-top: 0.5rem;
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      line-height: 1.5;
+    }
+    .collection-card code {
+      background: var(--bg-code);
+      padding: 0.1rem 0.35rem;
+      border-radius: 3px;
+      font-size: 0.72rem;
+    }
+
+    /* How it works */
+    .steps {
+      display: grid;
+      gap: 1.5rem;
+      counter-reset: step;
+    }
+    .step {
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+      counter-increment: step;
+    }
+    .step-num {
+      flex-shrink: 0;
+      width: 40px;
+      height: 40px;
+      background: var(--accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+    .step-content h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    .step-content p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 0;
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 0.85rem;
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    @media (max-width: 600px) {
+      .hero h1 { font-size: 2rem; }
+      .hero p { font-size: 1rem; }
+      .section-title { font-size: 1.4rem; }
+      .github-ribbon img { width: 100px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- GitHub Ribbon -->
+<a class="github-ribbon" href="https://github.com/arthurmolina/anyicon">
+  <img decoding="async" width="149" height="149"
+    src="https://github.blog/wp-content/uploads/2008/12/forkme_right_darkblue_121621.png?resize=149%2C149"
+    alt="Fork me on GitHub"
+    loading="lazy">
+</a>
+
+<!-- Hero -->
+<header class="hero">
+  <img src="anyicon.png" alt="Anyicon" class="hero-logo">
+  <h1><span>Any</span>icon</h1>
+  <p>Ruby on Rails view helpers for rendering SVG icons from any GitHub collection.</p>
+
+  <div class="hero-badges">
+    <a href="https://badge.fury.io/rb/anyicon"><img src="https://badge.fury.io/rb/anyicon.svg" alt="Gem Version"></a>
+    <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="MIT License"></a>
+    <a href="https://github.com/arthurmolina/anyicon"><img src="https://img.shields.io/github/stars/arthurmolina/anyicon?style=social" alt="GitHub Stars"></a>
+  </div>
+
+  <div class="hero-actions">
+    <a href="https://github.com/arthurmolina/anyicon" class="btn btn-primary">View on GitHub</a>
+    <a href="https://rubygems.org/gems/anyicon" class="btn btn-secondary">RubyGems</a>
+  </div>
+
+  <div class="install">
+    <span class="comment"># Gemfile</span><br>
+    gem <span style="color: var(--green)">'anyicon'</span>
+    <button onclick="navigator.clipboard.writeText(&quot;gem 'anyicon'&quot;);this.textContent='Copied!'">Copy</button>
+  </div>
+</header>
+
+<!-- Features -->
+<section>
+  <div class="container">
+    <h2 class="section-title">Why Anyicon?</h2>
+    <p class="section-sub">One helper, thousands of icons, zero JavaScript.</p>
+    <div class="features">
+      <div class="feature">
+        <div class="feature-icon">&#9889;</div>
+        <h3>Dead Simple</h3>
+        <p>One helper method. Pass the icon name, get an SVG. No asset pipeline configuration needed.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">&#128230;</div>
+        <h3>12,000+ Icons</h3>
+        <p>Font Awesome, Heroicons, Tabler, Carbon, Ionicons, Feather, and more. All built-in.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">&#128268;</div>
+        <h3>Auto-Fetch &amp; Cache</h3>
+        <p>Icons are downloaded from GitHub on first use and cached locally. No manual downloads.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">&#127912;</div>
+        <h3>Fully Customizable</h3>
+        <p>Pass any HTML attribute: class, id, fill, width, height, data-*, aria-*, and more.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">&#128274;</div>
+        <h3>Secure by Default</h3>
+        <p>SVG attribute allowlist, path traversal protection, SSRF prevention with host validation.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">&#128640;</div>
+        <h3>Bring Your Own</h3>
+        <p>Add any GitHub-hosted icon collection with a simple configuration block.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Usage -->
+<section>
+  <div class="container">
+    <h2 class="section-title">Usage</h2>
+    <p class="section-sub">Just call the helper in your views.</p>
+
+    <div class="code-example">
+      <div class="code-header">app/views/example.html.erb</div>
+<pre class="code-body"><span class="cmt">&lt;%# Positional argument %&gt;</span>
+<span class="tag">&lt;%=</span> <span class="fn">anyicon</span> <span class="str">"heroicons_outline:check"</span> <span class="tag">%&gt;</span>
+
+<span class="cmt">&lt;%# Keyword argument %&gt;</span>
+<span class="tag">&lt;%=</span> <span class="fn">anyicon</span> <span class="sym">icon:</span> <span class="str">"fontawesome_solid:star"</span> <span class="tag">%&gt;</span>
+
+<span class="cmt">&lt;%# With HTML attributes %&gt;</span>
+<span class="tag">&lt;%=</span> <span class="fn">anyicon</span> <span class="str">"tabler_icons_outline:heart"</span>,
+    <span class="sym">class:</span> <span class="str">"w-6 h-6"</span>,
+    <span class="sym">fill:</span> <span class="str">"red"</span>,
+    <span class="sym">id:</span> <span class="str">"fav-icon"</span> <span class="tag">%&gt;</span>
+
+<span class="cmt">&lt;%# Stimulus &amp; accessibility %&gt;</span>
+<span class="tag">&lt;%=</span> <span class="fn">anyicon</span> <span class="str">"ionicons:heart"</span>,
+    <span class="str">"data-controller":</span> <span class="str">"icon"</span>,
+    <span class="str">"aria-label":</span> <span class="str">"Favorite"</span>,
+    <span class="sym">role:</span> <span class="str">"img"</span> <span class="tag">%&gt;</span></pre>
+    </div>
+  </div>
+</section>
+
+<!-- How it works -->
+<section>
+  <div class="container">
+    <h2 class="section-title">How It Works</h2>
+    <p class="section-sub">From helper call to rendered SVG in milliseconds.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h3>Call the helper</h3>
+          <p>Use <code>anyicon "collection:icon_name"</code> in any view, partial, or layout.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h3>Auto-fetch if needed</h3>
+          <p>If the icon isn't cached locally, Anyicon downloads the SVG from the configured GitHub repo.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h3>Cache &amp; render</h3>
+          <p>The SVG is saved to <code>app/assets/images/icons/</code> and rendered inline with your custom attributes.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Configuration -->
+<section>
+  <div class="container">
+    <h2 class="section-title">Configuration</h2>
+    <p class="section-sub">Works out of the box, but fully configurable.</p>
+
+    <div class="code-example">
+      <div class="code-header">config/initializers/anyicon.rb</div>
+<pre class="code-body"><span class="kw">Anyicon</span>.configure <span class="kw">do</span> |config|
+  <span class="cmt"># Add your own collections</span>
+  config.<span class="fn">add_collections</span>(
+    <span class="sym">my_icons:</span> {
+      <span class="sym">repo:</span> <span class="str">"user/repo"</span>,
+      <span class="sym">path:</span> <span class="str">"path/to/icons"</span>,
+      <span class="sym">branch:</span> <span class="str">"main"</span>
+    }
+  )
+
+  <span class="cmt"># Optional: GitHub token for higher API rate limits</span>
+  <span class="cmt"># (60/hour without vs 5,000/hour with token)</span>
+  config.<span class="fn">github_token</span> = <span class="kw">ENV</span>[<span class="str">"GITHUB_TOKEN"</span>]
+<span class="kw">end</span></pre>
+    </div>
+  </div>
+</section>
+
+<!-- Collections -->
+<section>
+  <div class="container">
+    <h2 class="section-title">Built-in Collections</h2>
+    <p class="section-sub">12,000+ icons ready to use. Just reference them by name.</p>
+
+    <div class="collections-grid">
+      <a href="https://fontawesome.com/" class="collection-card" target="_blank">
+        <h4>Font Awesome</h4>
+        <div class="count">2,018 icons</div>
+        <div class="collections-list">
+          <code>fontawesome_regular</code>
+          <code>fontawesome_solid</code>
+          <code>fontawesome_brands</code>
+        </div>
+      </a>
+
+      <a href="https://heroicons.com/" class="collection-card" target="_blank">
+        <h4>Heroicons</h4>
+        <div class="count">592 icons</div>
+        <div class="collections-list">
+          <code>heroicons_outline</code>
+          <code>heroicons_solid</code>
+        </div>
+      </a>
+
+      <a href="https://tabler-icons.io/" class="collection-card" target="_blank">
+        <h4>Tabler Icons</h4>
+        <div class="count">5,290 icons</div>
+        <div class="collections-list">
+          <code>tabler_icons_filled</code>
+          <code>tabler_icons_outline</code>
+        </div>
+      </a>
+
+      <a href="https://mageicons.com/" class="collection-card" target="_blank">
+        <h4>Mage Icons</h4>
+        <div class="count">1,094 icons</div>
+        <div class="collections-list">
+          <code>mage_icons_fill</code>
+          <code>mage_icons_stroke</code>
+          <code>mage_icons_social_bw</code>
+          <code>mage_icons_social_color</code>
+        </div>
+      </a>
+
+      <a href="https://icons8.com/line-awesome" class="collection-card" target="_blank">
+        <h4>Line Awesome</h4>
+        <div class="count">1,554 icons</div>
+        <div class="collections-list">
+          <code>line_awesome</code>
+        </div>
+      </a>
+
+      <a href="https://github.com/carbon-design-system/carbon" class="collection-card" target="_blank">
+        <h4>Carbon Icons</h4>
+        <div class="count">2,212 icons</div>
+        <div class="collections-list">
+          <code>carbon</code>
+        </div>
+      </a>
+
+      <a href="https://ionic.io/ionicons" class="collection-card" target="_blank">
+        <h4>Ionicons</h4>
+        <div class="count">1,356 icons</div>
+        <div class="collections-list">
+          <code>ionicons</code>
+        </div>
+      </a>
+
+      <a href="https://feathericons.com/" class="collection-card" target="_blank">
+        <h4>Feather Icons</h4>
+        <div class="count">287 icons</div>
+        <div class="collections-list">
+          <code>feather_icons</code>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Quick Start -->
+<section>
+  <div class="container">
+    <h2 class="section-title">Quick Start</h2>
+    <p class="section-sub">Up and running in 30 seconds.</p>
+
+    <div class="code-example">
+      <div class="code-header">Terminal</div>
+<pre class="code-body"><span class="cmt"># Add to your Gemfile</span>
+<span style="color:var(--text-dim)">$</span> bundle add anyicon
+
+<span class="cmt"># Or generate the initializer</span>
+<span style="color:var(--text-dim)">$</span> rails generate anyicon:install
+
+<span class="cmt"># Use in any view</span>
+&lt;%= anyicon <span class="str">"heroicons_outline:check"</span>, <span class="sym">class:</span> <span class="str">"w-5 h-5"</span> %&gt;</pre>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="container">
+    <p>
+      Anyicon is open source under the <a href="https://opensource.org/licenses/MIT">MIT License</a>.<br>
+      Created by <a href="https://github.com/arthurmolina">Arthur Molina</a>.
+      <br><br>
+      <a href="https://github.com/arthurmolina/anyicon">GitHub</a> &middot;
+      <a href="https://rubygems.org/gems/anyicon">RubyGems</a> &middot;
+      <a href="https://rubydoc.info/github/arthurmolina/anyicon">Documentation</a>
+    </p>
+  </div>
+</footer>
+
+</body>
+</html>
